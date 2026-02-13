@@ -13,8 +13,6 @@ A solução foi concebida para funcionar de forma embarcada, integrando-se à in
 
 [Provisionamento via Captive Portal](./docs/captive-portal.md)
 
----
-
 ## Autores
 
 - Gustavo Camargo Domingues

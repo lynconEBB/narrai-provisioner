@@ -15,13 +15,18 @@ sync_files() {
     rsync -avz \
         --delete \
         --exclude 'virt/' \
+        --exclude 'docs/' \
         --exclude '.git/' \
         --exclude '__pycache__/' \
         --exclude '*.pyc' \
+        --exclude '*.md' \
         --exclude '*.sh' \
+        --exclude '*.env' \
+        --exclude '*.env.prod' \
         -e ssh \
         "$SCRIPT_DIR/" \
         "${REMOTE_USER}@${REMOTE_IP}:${REMOTE_DIR}"
+    scp "${SCRIPT_DIR}/.env.prod" "${REMOTE_USER}@${REMOTE_IP}:${REMOTE_DIR}/.env"
     echo "Sync completed."
 }
 
@@ -33,7 +38,9 @@ stop_flask() {
 start_flask() {
     $SSH "killall flask || true"
     echo "Starting Flask..."
-    $SSH "cd ${REMOTE_DIR} && nohup flask --app hello run --host 100.64.0.1 --port 80 > flask.log 2>&1 &"
+    $SSH "cd ${REMOTE_DIR} &&
+        killall python || true &&
+        nohup python run.py > flask.log 2>&1 &"
 }
 
 restart_flask() {
